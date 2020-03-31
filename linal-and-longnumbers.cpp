@@ -276,7 +276,11 @@ public:
             Nmb[i] = b.Nmb[i];
         }
     }
-    ~longNumber () {}
+    ~longNumber () {
+        if (Nmb) {
+            delete []Nmb;
+        }
+    }
     // Printer for longnumber class.
     void print() const{
         char x = '0' + Nmb[sz - 1];
@@ -300,6 +304,7 @@ public:
         }
         if (this->Nmb) {
             delete []this->Nmb;
+            this->Nmb = nullptr;
         }
         ret.sign = this->sign;
         //std::cout<<ret.sz<<"here\n";
