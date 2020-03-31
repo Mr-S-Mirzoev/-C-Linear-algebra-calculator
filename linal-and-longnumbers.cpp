@@ -303,10 +303,8 @@ public:
             ret.Nmb[i] = this->Nmb[i];
         }
         ret.sign = this->sign;
-        //std::cout<<ret.sz<<"here\n";
         if (ret.sz == 1 && !ret.Nmb[0]) {
             ret.sign = false;
-            //std::cout<<"here\n";
         }
         return ret;
     }
@@ -397,18 +395,14 @@ public:
     // Binary sub
     longNumber operator-(const longNumber& rv) const {
         longNumber lv(*this);
-        //std::cout<<lv<<' '<<rv<<' '<<lv.sign<<' '<<rv.sign<<'\n';
         if (lv.sign ^ rv.sign) {
-            //std::cout<<"got here\n";
             if (lv.sign) {
-                //std::cout<<"got here\n";
                 return (-(rv + (-lv))).resize();
             } else {
                 return (lv + (-rv)).resize();
             }
         } else {
             if (lv.sign) {
-                //std::cout<<"got hdfgfrgere\n";
                 return (-((-lv) - (-rv))).resize();
             } else {
                 int cmp = compare(lv,rv);
@@ -519,9 +513,6 @@ public:
         for (; i < l && s[i] != ','; i++) {}
         Re = longNumber(s.substr(1, i - 1));
         Im = longNumber(s.substr(i + 1, l - i - 2));
-        //Re.print();
-        //Im.print();
-        //std::cout<<Re.size()<<Im.size()<<std::endl;
     }
     explicit complex (const longNumber &a = 0, const longNumber &b = 0): Re(a), Im(b) {}
     const longNumber re () const
@@ -613,7 +604,6 @@ public:
             if (isspace(a[i])) {
                 e = i;
                 complex x(my_substr(a, b, e));
-                //std::cout<<x<<std::endl;
                 arr[j] = x;
                 j++;
                 b = e + 1;
