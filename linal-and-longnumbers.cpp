@@ -145,7 +145,11 @@ public:
         }
         val[size] = '\0';
     }
-    ~positiveLN () {}
+    ~positiveLN () {
+        if (val) {
+            delete []val;
+        }
+    }
     void karatsuba(char* x, char* y, char* res)
     {
         make_equal_length(x, y);
@@ -233,11 +237,11 @@ private:
     char *Nmb; // Array with numbers in ull.
     size_t sz; // size of array
     bool sign ; //False - positive, True - negative
-    
 public:
     // Creates default long number which equals to 0;
     longNumber () {
-        Nmb = new char (0);
+        Nmb = new char[1];
+        Nmb[0] = 0;
         sign = false;
         sz = 1;
     }
@@ -276,11 +280,7 @@ public:
             Nmb[i] = b.Nmb[i];
         }
     }
-    ~longNumber () {
-        if (Nmb) {
-            delete []Nmb;
-        }
-    }
+    ~longNumber () {}
     // Printer for longnumber class.
     void print() const{
         char x = '0' + Nmb[sz - 1];
@@ -301,10 +301,6 @@ public:
         longNumber ret(i + 1);
         for (; i >= 0; i--) {
             ret.Nmb[i] = this->Nmb[i];
-        }
-        if (this->Nmb) {
-            delete []this->Nmb;
-            this->Nmb = nullptr;
         }
         ret.sign = this->sign;
         //std::cout<<ret.sz<<"here\n";
@@ -446,6 +442,9 @@ public:
         return (*this);
     }
     longNumber& operator=(const longNumber& b) {
+        if (&b == this) {
+            return (*this);
+        }
         sign = b.sign;
         sz = b.sz;
         Nmb = new char [sz];
@@ -695,6 +694,9 @@ public:
         return lv;
     }
     vec operator=(const vec &rv) {
+        if (&rv == this) {
+            return (*this);
+        }
         sz = rv.sz;
         arr = new complex [sz];
         for (int i = 0; i < sz; i++) {
@@ -818,9 +820,7 @@ public:
         this->a[j] = x;
         delete []idx;
     }
-    ~mat () {
-        std::vector<vec>().swap(a);
-    }
+    ~mat () {}
     vec& operator[](const unsigned i) {
         return (this->a[i]);
     }
@@ -849,25 +849,26 @@ public:
         }
         return lv;
     }
-    mat operator*(const vec &rv) const{
+    vec operator*(const vec &rv) const{
         if (hor != rv.size()) {
             std::cerr<<"Doing mul of matrix and vector with incompatible size"<<std::endl;
             exit(1);
         }
         mat lv(*this);
-        mat res(*this);
+        vec res(ver);
         for (unsigned i = 0; i < ver; i++) {
-            for (unsigned j = 0; j < hor; i++) {
-                complex sum("(0,0)");
-                for (unsigned k = 0; k < hor; k ++) {
-                    sum += rv.get(k) * lv.a[i][k];
-                }
-                res.a[i][j] = sum;
+            complex sum("(0,0)");
+            for (unsigned k = 0; k < hor; k ++) {
+                sum += rv.get(k) * lv.a[i][k];
             }
+            res[i] = sum;
         }
         return res;
     }
     mat operator=(const mat &rv) {
+        if (&rv == this) {
+            return (*this);
+        }
         hor = rv.hor;
         ver = rv.ver;
         for (int i = 0; i < ver; i++) {
@@ -934,6 +935,7 @@ void test () {
 int main(int argc, const char * argv[]) {
     size_t v,h;
     char end;
+    setbuf(stderr, nullptr);
     vec y;
     std::cin >> y;
     std::cin >> v >> h >> end;
